@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import os
 import bcrypt
 from datetime import date, timedelta
+from init_db import create_database  # Add this line
 
 load_dotenv()
 
@@ -385,6 +386,33 @@ def update_book(book_id, title, author, isbn, publication_year, genre, descripti
             st.error(f"Error updating book: {e}")
         finally:
             conn.close()
+
+def ensure_database_exists():
+    conn = create_connection()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("SHOW TABLES")
+            tables = cursor.fetchall()
+            required_tables = {'users', 'books', 'categories', 'loans', 'reviews'}
+            existing_tables = {table[0] for table in tables}
+            
+            if not required_tables.issubset(existing_tables):
+                print("Database tables are missing. Running initialization...")
+                create_database()
+            else:
+                print("Database and tables already exist.")
+        except Error as e:
+            print(f"Error checking database: {e}")
+            create_database()
+        finally:
+            conn.close()
+    else:
+        print("Unable to connect to database. Running initialization...")
+        create_database()
+
+# Call this function before main
+ensure_database_exists()
 
 def main():
     st.title("Library Management System")
