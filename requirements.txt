@@ -17,7 +17,6 @@ mdurl==0.1.2
 mysql-connector-python==8.0.33
 narwhals==1.5.5
 pandas==2.2.2
-pillow==10.4.0
 pyarrow==17.0.0
 pydeck==0.9.1
 Pygments==2.18.0
