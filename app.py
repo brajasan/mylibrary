@@ -355,7 +355,7 @@ def get_book_recommendations(user_id):
                        SELECT book_id FROM loans WHERE user_id = %s
                    )
                 GROUP BY b.book_id
-                ORDER BY avg_rating DESC NULLS LAST
+                ORDER BY avg_rating IS NULL, avg_rating DESC
                 LIMIT 5
             """, (*genres, *categories, user_id))
 
